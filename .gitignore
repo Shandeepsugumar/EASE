@@ -1,0 +1,100 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Additional Flutter/Android build artifacts
+android/app/.cxx/
+android/.gradle/
+android/app/build/
+android/build/
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+
+# iOS build artifacts
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/flutter_assets/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS build artifacts
+macos/Pods/
+macos/.symlinks/
+macos/Flutter/Flutter-Debug.xcconfig
+macos/Flutter/Flutter-Release.xcconfig
+
+# Windows build artifacts
+windows/flutter/
+
+# Linux build artifacts
+linux/flutter/
+
+# Web build artifacts
+web/
+
+# Coverage
+coverage/
+
+# Exceptions to above rules
+!android/app/src/main/
+!android/app/build.gradle
+!android/build.gradle
+!android/settings.gradle
+!android/gradle.properties
+!ios/Runner/
+!ios/Runner.xcodeproj/
+!ios/Runner.xcworkspace/
+!macos/Runner/
+!macos/Runner.xcodeproj/
+!macos/Runner.xcworkspace/
+!windows/runner/
+!linux/
+!web/favicon.png
+!web/icons/
+!web/index.html
+!web/manifest.json

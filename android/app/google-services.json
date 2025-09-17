@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "23297746199",
+    "project_id": "ease-58369",
+    "storage_bucket": "ease-58369.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23297746199:android:247b0a72ed1a4052010352",
+        "android_client_info": {
+          "package_name": "com.example.ease"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23297746199-lnkktjrq1dbqgamsmqre1pf4ct73d5r9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ease",
+            "certificate_hash": "c0f3cb53b0387a16b3b14d9f270a16af94869821"
+          }
+        },
+        {
+          "client_id": "23297746199-8ajpu83iun315ueiggcuq1q51175rokd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9py2HHCy6VuNpuKVkadx_wJmuPNHjL_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23297746199-8ajpu83iun315ueiggcuq1q51175rokd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "23297746199-stt2sk9bqobiju395l3vulbm5bm801ss.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ease"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
