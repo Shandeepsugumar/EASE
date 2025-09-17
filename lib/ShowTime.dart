@@ -154,6 +154,80 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
     );
   }
 
+  // Build dropdown items with green line separators in a single box
+  List<DropdownMenuItem<String>> _buildDropdownItems() {
+    final List<String> options = ['All', 'Degradable', 'Non-Biodegradable'];
+    List<DropdownMenuItem<String>> items = [];
+
+    for (int i = 0; i < options.length; i++) {
+      String value = options[i];
+
+      items.add(
+        DropdownMenuItem<String>(
+          value: value,
+          child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey[850]
+                  : Colors.white,
+              borderRadius: BorderRadius.vertical(
+                top: i == 0 ? Radius.circular(12) : Radius.zero,
+                bottom:
+                    i == options.length - 1 ? Radius.circular(12) : Radius.zero,
+              ),
+              border: Border.all(
+                color: Colors.green.shade600,
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.green.shade200.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              child: Row(
+                children: [
+                  Icon(
+                    value == 'All'
+                        ? Icons.layers
+                        : value == 'Degradable'
+                            ? Icons.eco
+                            : Icons.delete,
+                    color: value == 'Degradable'
+                        ? Colors.green.shade600
+                        : value == 'Non-Biodegradable'
+                            ? Colors.red.shade400
+                            : Colors.blue.shade400,
+                    size: 20,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    value,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return items;
+  }
+
   String _filterType = 'All'; // Default filter type
 
   @override
@@ -185,9 +259,7 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
         title: Text(
           "Recycling Centers & Junk Yards",
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 26,
                 letterSpacing: 1.2,
@@ -230,9 +302,8 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
                     ),
                     content: Text(
                       "Step into a world of eco-friendly wonders! Uncover recycling centers and junk yards that transform waste into treasure. Ready to explore?",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.green.shade600),
+                      style:
+                          TextStyle(fontSize: 16, color: Colors.green.shade600),
                     ),
                     actions: [
                       TextButton(
@@ -275,7 +346,9 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.green.shade700,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                       ),
                 ),
               ],
@@ -292,19 +365,37 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    color: Theme.of(context).cardColor,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        _currentAddress,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                            ),
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[950]
+                        : Theme.of(context).cardColor,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.1),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ]
+                                : null,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text(
+                          _currentAddress,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 16,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                        ),
                       ),
                     ),
                   ),
@@ -312,7 +403,9 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
             // 🔽 Dropdown Filter
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).cardColor.withOpacity(0.6),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey[850]
+                    : Theme.of(context).cardColor.withOpacity(0.6),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -333,7 +426,7 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
                   icon: Icon(Icons.arrow_drop_down,
                       color: Colors.green.shade600, size: 28),
                   isExpanded: true,
-                  dropdownColor: Theme.of(context).cardColor,
+                  dropdownColor: Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 16,
@@ -342,43 +435,42 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
                             ? Colors.white
                             : Colors.black,
                       ),
-                  items: ['All', 'Degradable', 'Non-Biodegradable']
-                      .map((String value) => DropdownMenuItem(
-                            value: value,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  value == 'All'
-                                      ? Icons.layers
-                                      : value == 'Degradable'
-                                          ? Icons.eco
-                                          : Icons.delete,
-                                  color: value == 'Degradable'
-                                      ? Colors.green.shade600
-                                      : value == 'Non-Biodegradable'
-                                          ? Colors.red.shade400
-                                          : Colors.blue.shade400,
-                                  size: 20,
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  value,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ))
-                      .toList(),
+                  selectedItemBuilder: (BuildContext context) {
+                    return ['All', 'Degradable', 'Non-Biodegradable']
+                        .map((String value) {
+                      return Row(
+                        children: [
+                          Icon(
+                            value == 'All'
+                                ? Icons.layers
+                                : value == 'Degradable'
+                                    ? Icons.eco
+                                    : Icons.delete,
+                            color: value == 'Degradable'
+                                ? Colors.green.shade600
+                                : value == 'Non-Biodegradable'
+                                    ? Colors.red.shade400
+                                    : Colors.blue.shade400,
+                            size: 20,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            value,
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                          ),
+                        ],
+                      );
+                    }).toList();
+                  },
+                  items: _buildDropdownItems(),
                   onChanged: (String? newValue) {
                     setState(() {
                       _filterType = newValue!;
@@ -419,94 +511,112 @@ class _RecyclingSearchPageState extends State<RecyclingSearchPage> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            color: Theme.of(context).cardColor,
-                            child: Padding(
-                              padding: EdgeInsets.all(12),
-                              child: Row(
-                                children: [
-                                  // 🖼️ Image Section
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Container(
-                                      width: 80,
-                                      height: 80,
-                                      child: Image.network(
-                                        result['image'],
-                                        fit: BoxFit.cover,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey[950]
+                                    : Theme.of(context).cardColor,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? [
+                                        BoxShadow(
+                                          color: Colors.white.withOpacity(0.1),
+                                          blurRadius: 8,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ]
+                                    : null,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(12),
+                                child: Row(
+                                  children: [
+                                    // 🖼️ Image Section
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Container(
+                                        width: 80,
+                                        height: 80,
+                                        child: Image.network(
+                                          result['image'],
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(width: 16),
-                                  // 📝 Info Section
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          result['name'],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18,
-                                                color: Theme.of(context)
-                                                            .brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                    SizedBox(width: 16),
+                                    // 📝 Info Section
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            result['name'],
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            result['address'],
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  fontSize: 14,
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white70
+                                                      : Colors.black87,
+                                                ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 8),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.location_on,
+                                                  size: 16,
+                                                  color: Colors.green.shade600),
+                                              SizedBox(width: 4),
+                                              Text(
+                                                distanceStr,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      fontSize: 14,
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white70
+                                                          : Colors.black54,
+                                                    ),
                                               ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          result['address'],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.copyWith(
-                                                fontSize: 14,
-                                                color: Theme.of(context)
-                                                            .brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white70
-                                                    : Colors.black87,
-                                              ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.location_on,
-                                                size: 16,
-                                                color: Colors.green.shade600),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              distanceStr,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.copyWith(
-                                                    fontSize: 14,
-                                                    color: Theme.of(context)
-                                                                .brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white70
-                                                        : Colors.black54,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  // ➡️ Arrow Icon
-                                  Icon(Icons.arrow_forward_ios,
-                                      size: 16, color: Colors.green.shade600),
-                                ],
+                                    // ➡️ Arrow Icon
+                                    Icon(Icons.arrow_forward_ios,
+                                        size: 16, color: Colors.green.shade600),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -552,6 +662,12 @@ class DetailPage extends StatelessWidget {
         ),
         backgroundColor: Colors.green.shade800,
         elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+        ),
       ),
       // Stack to layer the background image with gradient and the content
       body: Stack(
@@ -568,12 +684,19 @@ class DetailPage extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Colors.white,
-                      Colors.white.withOpacity(0.9),
-                      Colors.white.withOpacity(0.6),
-                      Colors.transparent,
-                    ],
+                    colors: Theme.of(context).brightness == Brightness.dark
+                        ? [
+                            Colors.black,
+                            Colors.black.withOpacity(0.9),
+                            Colors.black.withOpacity(0.6),
+                            Colors.transparent,
+                          ]
+                        : [
+                            Colors.white,
+                            Colors.white.withOpacity(0.9),
+                            Colors.white.withOpacity(0.6),
+                            Colors.transparent,
+                          ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: [0.0, 0.3, 0.6, 1.0],
@@ -621,7 +744,9 @@ class DetailPage extends StatelessWidget {
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
-                    color: Colors.green.shade800,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.green.shade800,
                     letterSpacing: 1.2,
                   ),
                   textAlign: TextAlign.center,
@@ -629,23 +754,25 @@ class DetailPage extends StatelessWidget {
                 SizedBox(height: 8),
                 Divider(
                   thickness: 1,
-                  color: Colors.green.shade100,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white.withOpacity(0.3)
+                      : Colors.green.shade100,
                 ),
                 SizedBox(height: 16),
                 // Address Section
-                _buildAddressSection(),
+                _buildAddressSection(context),
                 SizedBox(height: 20),
                 // Animated Distance Section
-                _buildDistanceSection(distance),
+                _buildDistanceSection(context, distance),
                 SizedBox(height: 20),
                 // Phone Section (call-to-action)
-                _buildPhoneSection(),
+                _buildPhoneSection(context),
                 SizedBox(height: 20),
                 // Accessibility Section with soft frosted glass effect
-                _buildAccessibilitySection(accessibility),
+                _buildAccessibilitySection(context, accessibility),
                 SizedBox(height: 20),
                 // Recycling Options Section
-                _buildRecyclingOptionsSection(recyclingList),
+                _buildRecyclingOptionsSection(context, recyclingList),
                 SizedBox(height: 30),
               ],
             ),
@@ -662,7 +789,9 @@ class DetailPage extends StatelessWidget {
             throw 'Could not launch $link';
           }
         },
-        backgroundColor: Colors.green.shade800,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey[700]
+            : Colors.green.shade800,
         child: Icon(
           Icons.location_on,
           size: 30,
@@ -673,15 +802,24 @@ class DetailPage extends StatelessWidget {
   }
 
   // Address Section with icon
-  Widget _buildAddressSection() {
+  Widget _buildAddressSection(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.location_on, color: Colors.green.shade700, size: 30),
+        Icon(Icons.location_on,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.green.shade700,
+            size: 30),
         SizedBox(width: 10),
         Expanded(
           child: Text(
             placeData['address'],
-            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white70
+                  : Colors.grey[700],
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -691,7 +829,7 @@ class DetailPage extends StatelessWidget {
   }
 
   // Animated Distance Section with TweenAnimationBuilder
-  Widget _buildDistanceSection(double distance) {
+  Widget _buildDistanceSection(BuildContext context, double distance) {
     final progressValue = (distance / 100).clamp(0.0, 1.0);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -701,7 +839,9 @@ class DetailPage extends StatelessWidget {
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
-              color: Colors.green.shade800),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.green.shade800),
         ),
         SizedBox(height: 8),
         TweenAnimationBuilder<double>(
@@ -717,7 +857,9 @@ class DetailPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
-                      colors: [Colors.green.shade200, Colors.green.shade500],
+                      colors: Theme.of(context).brightness == Brightness.dark
+                          ? [Colors.grey[700]!, Colors.grey[500]!]
+                          : [Colors.green.shade200, Colors.green.shade500],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -725,8 +867,15 @@ class DetailPage extends StatelessWidget {
                   child: CircularProgressIndicator(
                     value: value,
                     strokeWidth: 12,
-                    valueColor: AlwaysStoppedAnimation(Colors.green.shade700),
-                    backgroundColor: Colors.white.withOpacity(0.3),
+                    valueColor: AlwaysStoppedAnimation(
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.green.shade700,
+                    ),
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.black.withOpacity(0.3)
+                            : Colors.white.withOpacity(0.3),
                   ),
                 ),
                 Text(
@@ -734,7 +883,9 @@ class DetailPage extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.green.shade800),
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.green.shade800),
                 ),
               ],
             );
@@ -745,7 +896,7 @@ class DetailPage extends StatelessWidget {
   }
 
   // Phone Section with call action wrapped in a Card
-  Widget _buildPhoneSection() {
+  Widget _buildPhoneSection(BuildContext context) {
     String phone = placeData['phone'] ?? '';
     return GestureDetector(
       onTap: () async {
@@ -761,7 +912,12 @@ class DetailPage extends StatelessWidget {
       child: Card(
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        color: Colors.green.shade50,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey[800]
+            : Colors.green.shade50,
+        shadowColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white.withOpacity(0.2)
+            : Colors.black.withOpacity(0.1),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Row(
@@ -770,7 +926,12 @@ class DetailPage extends StatelessWidget {
               SizedBox(width: 10),
               Text(
                 "Phone: ${phone.isNotEmpty ? phone : 'N/A'}",
-                style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.grey[700],
+                ),
               ),
             ],
           ),
@@ -780,7 +941,8 @@ class DetailPage extends StatelessWidget {
   }
 
   // Accessibility Section with frosted glass effect
-  Widget _buildAccessibilitySection(String accessibility) {
+  Widget _buildAccessibilitySection(
+      BuildContext context, String accessibility) {
     return accessibility != "N/A"
         ? ClipRRect(
             borderRadius: BorderRadius.circular(15),
@@ -788,16 +950,24 @@ class DetailPage extends StatelessWidget {
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black.withOpacity(0.3)
+                      : Colors.white.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.white.withOpacity(0.2)),
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.2)
+                        : Colors.white.withOpacity(0.2),
+                  ),
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
                   "Accessibility: $accessibility",
                   style: TextStyle(
                       fontSize: 18,
-                      color: Colors.green.shade800,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.green.shade800,
                       fontWeight: FontWeight.bold),
                 ),
               ),
@@ -807,7 +977,8 @@ class DetailPage extends StatelessWidget {
   }
 
   // Recycling Options Section with updated sleek cards
-  Widget _buildRecyclingOptionsSection(List<String> recyclingList) {
+  Widget _buildRecyclingOptionsSection(
+      BuildContext context, List<String> recyclingList) {
     return recyclingList.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -816,12 +987,19 @@ class DetailPage extends StatelessWidget {
                 "Recycling Options:",
                 style: TextStyle(
                     fontSize: 18,
-                    color: Colors.green.shade800,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.green.shade800,
                     fontWeight: FontWeight.bold),
               ),
               ...recyclingList.map((item) => Card(
-                    color: Colors.green.shade50,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.green.shade50,
                     elevation: 4,
+                    shadowColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.2)
+                        : Colors.black.withOpacity(0.1),
                     margin: EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
@@ -829,7 +1007,12 @@ class DetailPage extends StatelessWidget {
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
                         "- $item",
-                        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.grey[700],
+                        ),
                       ),
                     ),
                   )),

@@ -12,6 +12,7 @@ import 'state/app_state.dart';
 import 'widgets/app_top_bar.dart';
 import 'ShowTime.dart';
 import 'report.dart';
+
 class HomePage extends StatelessWidget {
   final User user;
   HomePage({required this.user});
@@ -65,8 +66,7 @@ class HomePage extends StatelessWidget {
           const Divider(thickness: 1),
           const SizedBox(height: 8),
           ListTile(
-            leading:
-            const Icon(Icons.sort_by_alpha_sharp, color: Colors.green),
+            leading: const Icon(Icons.sort_by_alpha_sharp, color: Colors.green),
             title: Text(l.english),
             onTap: () {
               _updateLanguage(context, "English");
@@ -117,7 +117,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppTopBar(
         leading: IconButton(
-          icon: Icon(Icons.translate, color: theme.iconTheme.color),
+          icon: Icon(Icons.translate, color: Colors.white),
           onPressed: () => _showLanguageDialog(context),
         ),
         title: StreamBuilder<DocumentSnapshot>(
@@ -127,7 +127,8 @@ class HomePage extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Text(localizations.home, style: TextStyle(color: theme.textTheme.titleLarge?.color));
+              return Text(localizations.home,
+                  style: TextStyle(color: theme.textTheme.titleLarge?.color));
             }
             final userData =
                 snapshot.data!.data() as Map<String, dynamic>? ?? {};
@@ -135,21 +136,22 @@ class HomePage extends StatelessWidget {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.home, size: 28, color: theme.iconTheme.color),
+                Icon(Icons.home, size: 28, color: Colors.white),
                 const SizedBox(width: 8),
-                Text(localizations.home, style: TextStyle(color: theme.textTheme.titleLarge?.color)),
+                Text(localizations.home,
+                    style: TextStyle(color: theme.textTheme.titleLarge?.color)),
               ],
             );
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.dark_mode, color: theme.iconTheme.color),
+            icon: Icon(Icons.dark_mode, color: Colors.white),
             onPressed: () => appState.toggleTheme(),
             tooltip: 'Toggle Theme',
           ),
           IconButton(
-            icon: Icon(Icons.person, color: theme.iconTheme.color),
+            icon: Icon(Icons.person, color: Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
@@ -177,8 +179,7 @@ class HomePage extends StatelessWidget {
               ),
             );
           }
-          final userData =
-              snapshot.data!.data() as Map<String, dynamic>? ?? {};
+          final userData = snapshot.data!.data() as Map<String, dynamic>? ?? {};
           String language = userData['language'] ?? "English";
           return AnimatedBackground(
             colors: [
@@ -188,127 +189,144 @@ class HomePage extends StatelessWidget {
               isDark ? Colors.black : Colors.white,
             ],
             child: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      color: theme.scaffoldBackgroundColor,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 24),
-                      child: Column(
-                        children: [
-                          PulsingWidget(
-                            child: CircleAvatar(
-                            radius: 50,
-                            backgroundColor: theme.scaffoldBackgroundColor,
-                            backgroundImage:
-                            AssetImage('lib/assets/earth.jpg'),
-                            onBackgroundImageError: (_, __) => Icon(
-                              Icons.image,
-                              size: 50,
-                              color: theme.iconTheme.color,
-                            ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            localizations.savingEarth,
-                            style: theme.textTheme.titleLarge?.copyWith(
-                                  color: isDark ? Colors.greenAccent : Colors.green,
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        color: theme.scaffoldBackgroundColor,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 24),
+                        child: Column(
+                          children: [
+                            PulsingWidget(
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundColor: theme.scaffoldBackgroundColor,
+                                backgroundImage:
+                                    AssetImage('lib/assets/earth.jpg'),
+                                onBackgroundImageError: (_, __) => Icon(
+                                  Icons.image,
+                                  size: 50,
+                                  color: theme.iconTheme.color,
                                 ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            localizations.subtext,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: isDark ? Colors.greenAccent : Colors.green,
-                                ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [theme.scaffoldBackgroundColor, Colors.transparent],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              localizations.savingEarth,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                color:
+                                    isDark ? Colors.greenAccent : Colors.green,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              localizations.subtext,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color:
+                                    isDark ? Colors.greenAccent : Colors.green,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ),
-                      padding: const EdgeInsets.only(
-                          top: 24, left: 16, right: 16),
-                      child: Column(
-                        children: [
-                          GridView.count(
-                            crossAxisCount: 2,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            childAspectRatio: 0.75,
-                            children: [
-                              SlideInAnimation(
-                                delay: Duration(milliseconds: 200),
-                                child: _buildCardWithBackground(
-                                context,
-                                _buildFeatureCard(
-                                  context,
-                                  Icons.eco,
-                                  "recycle",
-                                  localizations.recycleTitle,
-                                  localizations.recycleSubtitle,
-                                  isDark ? Colors.green[900]! : Colors.green[100]!,
-                                  isDark ? Colors.greenAccent : Colors.green[800]!,
-                                  language,
-                                ),
-                                ),
-                              ),
-                              SlideInAnimation(
-                                delay: Duration(milliseconds: 400),
-                                child: _buildCardWithBackground(
-                                context,
-                                _buildFeatureCard(
-                                  context,
-                                  Icons.track_changes,
-                                  "daily",
-                                  localizations.dailyChallengeTitle,
-                                  localizations.dailyChallengeSubtitle,
-                                  isDark ? Colors.blueGrey[900]! : Colors.blue[100]!,
-                                  isDark ? Colors.blueAccent : Colors.blue[800]!,
-                                  language,
-                                ),
-                                ),
-                              ),
-                              SlideInAnimation(
-                                delay: Duration(milliseconds: 600),
-                                child: _buildCardWithBackground(
-                                context,
-                                _buildFeatureCard(
-                                  context,
-                                  Icons.track_changes,
-                                  "wellness",
-                                  localizations.wellnessTitle,
-                                  localizations.wellnessSubtitle,
-                                  isDark ? Colors.green[900]! : Colors.green[100]!,
-                                  isDark ? Colors.blueAccent : Colors.blue[800]!,
-                                  language,
-                                ),
-                                ),
-                              ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              theme.scaffoldBackgroundColor,
+                              Colors.transparent
                             ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
-                          const SizedBox(height: 30),
-                        ],
+                        ),
+                        padding:
+                            const EdgeInsets.only(top: 24, left: 16, right: 16),
+                        child: Column(
+                          children: [
+                            GridView.count(
+                              crossAxisCount: 2,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.75,
+                              children: [
+                                SlideInAnimation(
+                                  delay: Duration(milliseconds: 200),
+                                  child: _buildCardWithBackground(
+                                    context,
+                                    _buildFeatureCard(
+                                      context,
+                                      Icons.eco,
+                                      "recycle",
+                                      localizations.recycleTitle,
+                                      localizations.recycleSubtitle,
+                                      isDark
+                                          ? Colors.green[900]!
+                                          : Colors.green[100]!,
+                                      isDark
+                                          ? Colors.greenAccent
+                                          : Colors.green[800]!,
+                                      language,
+                                    ),
+                                  ),
+                                ),
+                                SlideInAnimation(
+                                  delay: Duration(milliseconds: 400),
+                                  child: _buildCardWithBackground(
+                                    context,
+                                    _buildFeatureCard(
+                                      context,
+                                      Icons.track_changes,
+                                      "daily",
+                                      localizations.dailyChallengeTitle,
+                                      localizations.dailyChallengeSubtitle,
+                                      isDark
+                                          ? Colors.blueGrey[900]!
+                                          : Colors.blue[100]!,
+                                      isDark
+                                          ? Colors.blueAccent
+                                          : Colors.blue[800]!,
+                                      language,
+                                    ),
+                                  ),
+                                ),
+                                SlideInAnimation(
+                                  delay: Duration(milliseconds: 600),
+                                  child: _buildCardWithBackground(
+                                    context,
+                                    _buildFeatureCard(
+                                      context,
+                                      Icons.track_changes,
+                                      "wellness",
+                                      localizations.wellnessTitle,
+                                      localizations.wellnessSubtitle,
+                                      isDark
+                                          ? Colors.green[900]!
+                                          : Colors.green[100]!,
+                                      isDark
+                                          ? Colors.blueAccent
+                                          : Colors.blue[800]!,
+                                      language,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 30),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
             ),
           );
         },
@@ -317,7 +335,8 @@ class HomePage extends StatelessWidget {
       bottomNavigationBar: Container(
         height: 60,
         decoration: BoxDecoration(
-          color: theme.bottomAppBarTheme.color ?? (isDark ? Colors.black : Colors.white),
+          color: theme.bottomAppBarTheme.color ??
+              (isDark ? Colors.black : Colors.white),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -330,18 +349,22 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: Icon(Icons.home, color: isDark ? Colors.greenAccent : Colors.green[900]),
+              icon: Icon(Icons.home,
+                  color: isDark ? Colors.greenAccent : Colors.green[900]),
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.request_page_outlined, color: isDark ? Colors.greenAccent : Colors.green[900]),
+              icon: Icon(Icons.request_page_outlined,
+                  color: isDark ? Colors.greenAccent : Colors.green[900]),
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.incomplete_circle, color: isDark ? Colors.greenAccent : Colors.green[900]),
+              icon: Icon(Icons.incomplete_circle,
+                  color: isDark ? Colors.greenAccent : Colors.green[900]),
               onPressed: () async {
                 // Get the current logged in user's id.
-                final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+                final String currentUserId =
+                    FirebaseAuth.instance.currentUser!.uid;
 
                 // Query the reports collection with the filter conditions.
                 final QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -354,7 +377,11 @@ class HomePage extends StatelessWidget {
                   // Display a friendly message if no pending reports are found.
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(AppLocalizations.of(context)!.noPendingReports, style: TextStyle(color: theme.snackBarTheme.contentTextStyle?.color)),
+                      content: Text(
+                          AppLocalizations.of(context)!.noPendingReports,
+                          style: TextStyle(
+                              color:
+                                  theme.snackBarTheme.contentTextStyle?.color)),
                       backgroundColor: theme.snackBarTheme.backgroundColor,
                     ),
                   );
@@ -363,7 +390,8 @@ class HomePage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MyReportsScreen(userId: currentUserId),
+                      builder: (context) =>
+                          MyReportsScreen(userId: currentUserId),
                     ),
                   );
                 }
@@ -374,7 +402,6 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
 
   // Helper method to wrap a card with its own background.
   Widget _buildCardWithBackground(BuildContext context, Widget card) {
@@ -396,15 +423,15 @@ class HomePage extends StatelessWidget {
 
   // Updated feature card widget with an extra identifier parameter.
   Widget _buildFeatureCard(
-      BuildContext context,
-      IconData icon,
-      String cardIdentifier,
-      String title,
-      String subtitle,
-      Color bgColor,
-      Color iconColor,
-      String language, // New parameter for language
-      ) {
+    BuildContext context,
+    IconData icon,
+    String cardIdentifier,
+    String title,
+    String subtitle,
+    Color bgColor,
+    Color iconColor,
+    String language, // New parameter for language
+  ) {
     // Choose accent icon based on identifier.
     IconData accentIcon;
     switch (cardIdentifier) {
@@ -442,8 +469,7 @@ class HomePage extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => TaskPage()),
           );
-        }
-        else if (cardIdentifier == "wellness2") {
+        } else if (cardIdentifier == "wellness2") {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => WellnessPage1()),
