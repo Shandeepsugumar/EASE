@@ -14,11 +14,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "23297746199-07lteolpmsroesnam5ddvf3peki33fvf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ease",
+            "certificate_hash": "5994d61d23c5d43387946b1a36eeda28a597f2ba"
+          }
+        },
+        {
+          "client_id": "23297746199-c80a92o1660ntrbp0ae92ie40euvb114.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ease",
+            "certificate_hash": "076e8fb13fcee9b279dc0fefa83584f8bbeb7a9c"
+          }
+        },
+        {
+          "client_id": "23297746199-cvtq1k8b34l7q90adfu687q0c609pv9c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ease",
+            "certificate_hash": "92ee519966adbdbdda8c05f603f52376d88791a3"
+          }
+        },
+        {
           "client_id": "23297746199-lnkktjrq1dbqgamsmqre1pf4ct73d5r9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.ease",
             "certificate_hash": "c0f3cb53b0387a16b3b14d9f270a16af94869821"
+          }
+        },
+        {
+          "client_id": "23297746199-pgkgq61accprg6d33b1dr25jasocjuq3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ease",
+            "certificate_hash": "5c2573772d0498c0a1e95ba7ea9d026f807cb341"
           }
         },
         {
@@ -39,10 +71,46 @@
               "client_type": 3
             },
             {
-              "client_id": "23297746199-stt2sk9bqobiju395l3vulbm5bm801ss.apps.googleusercontent.com",
+              "client_id": "23297746199-cearpt2md0i9rsq2iaquagmtbqoc2km0.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.ease"
+                "bundle_id": "com.example.ecoadmins"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23297746199:android:036498ce334226d0010352",
+        "android_client_info": {
+          "package_name": "com.example.ecoadmins"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23297746199-8ajpu83iun315ueiggcuq1q51175rokd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9py2HHCy6VuNpuKVkadx_wJmuPNHjL_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23297746199-8ajpu83iun315ueiggcuq1q51175rokd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "23297746199-cearpt2md0i9rsq2iaquagmtbqoc2km0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ecoadmins"
               }
             }
           ]
