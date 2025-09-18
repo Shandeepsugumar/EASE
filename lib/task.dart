@@ -24,7 +24,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
   late AnimationController _backgroundController;
   late AnimationController _cardController;
   late ConfettiController _confettiController;
-  
+
   List<TaskLevel> taskLevels = [];
   int currentUnlockedLevel = 0;
 
@@ -46,14 +46,14 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
       duration: Duration(seconds: 20),
       vsync: this,
     )..repeat();
-    
+
     _cardController = AnimationController(
       duration: Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _confettiController = ConfettiController(duration: Duration(seconds: 3));
-    
+
     _cardController.forward();
   }
 
@@ -136,7 +136,8 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
         id: 7,
         title: "Air Guardian",
         subtitle: "Clean the air we breathe",
-        description: "Remove pollution sources and plant trees to improve air quality!",
+        description:
+            "Remove pollution sources and plant trees to improve air quality!",
         icon: "🌬️",
         color: Colors.lightBlue,
         difficulty: localizations.medium,
@@ -148,7 +149,8 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
         id: 8,
         title: "Wildlife Protector",
         subtitle: "Save endangered animals",
-        description: "Protect animals from dangers and help them thrive in their natural habitat!",
+        description:
+            "Protect animals from dangers and help them thrive in their natural habitat!",
         icon: "🦁",
         color: Colors.brown,
         difficulty: localizations.hard,
@@ -160,7 +162,8 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
         id: 9,
         title: "Climate Hero",
         subtitle: "Fight global warming",
-        description: "Take climate actions to reduce global temperature and save our planet!",
+        description:
+            "Take climate actions to reduce global temperature and save our planet!",
         icon: "🌍",
         color: Colors.indigo,
         difficulty: localizations.hard,
@@ -172,7 +175,8 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
         id: 10,
         title: "Food Saver",
         subtitle: "Reduce food waste",
-        description: "Save fresh food and compost old food to reduce waste and help the environment!",
+        description:
+            "Save fresh food and compost old food to reduce waste and help the environment!",
         icon: "🍽️",
         color: Colors.orange,
         difficulty: localizations.medium,
@@ -190,10 +194,13 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
       final Map<String, dynamic> progress = json.decode(progressData);
       setState(() {
         currentUnlockedLevel = progress['unlockedLevel'] ?? 0;
-        for (int i = 0; i <= currentUnlockedLevel && i < taskLevels.length; i++) {
+        for (int i = 0;
+            i <= currentUnlockedLevel && i < taskLevels.length;
+            i++) {
           taskLevels[i].isUnlocked = true;
           if (progress['completedTasks'] != null) {
-            taskLevels[i].isCompleted = progress['completedTasks'].contains(i + 1);
+            taskLevels[i].isCompleted =
+                progress['completedTasks'].contains(i + 1);
           }
         }
       });
@@ -206,12 +213,12 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
         .where((task) => task.isCompleted)
         .map((task) => task.id)
         .toList();
-    
+
     final progressData = {
       'unlockedLevel': currentUnlockedLevel,
       'completedTasks': completedTasks,
     };
-    
+
     await prefs.setString('task_progress', json.encode(progressData));
   }
 
@@ -221,7 +228,8 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
       if (taskIndex != -1) {
         taskLevels[taskIndex].isCompleted = true;
         // Unlock next level
-        if (taskIndex + 1 < taskLevels.length && currentUnlockedLevel == taskIndex) {
+        if (taskIndex + 1 < taskLevels.length &&
+            currentUnlockedLevel == taskIndex) {
           currentUnlockedLevel = taskIndex + 1;
           taskLevels[taskIndex + 1].isUnlocked = true;
           _confettiController.play();
@@ -250,7 +258,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
         children: [
           // Animated Background
           _buildAnimatedBackground(),
-          
+
           // Confetti
           Align(
             alignment: Alignment.topCenter,
@@ -261,7 +269,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
               colors: [Colors.green, Colors.blue, Colors.orange, Colors.pink],
             ),
           ),
-          
+
           // Main Content
           SafeArea(
             child: Column(
@@ -311,7 +319,10 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
           Row(
             children: [
               IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.green[800]),
+                icon: Icon(Icons.arrow_back,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.greenAccent
+                        : Colors.green[800]),
                 onPressed: () => Navigator.pop(context),
               ),
               Expanded(
@@ -320,7 +331,9 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green[800],
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.greenAccent
+                        : Colors.green[800],
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -330,23 +343,25 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                 decoration: BoxDecoration(
                   color: Colors.orange,
                   borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
+                ),
+                child: Text(
                   "${AppLocalizations.of(context)!.level} ${currentUnlockedLevel + 1}",
-              style: TextStyle(
-                color: Colors.white,
+                  style: TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
           SizedBox(height: 10),
           Text(
             l.completeMissions,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.grey[600],
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.greenAccent
+                  : Colors.grey[600],
               fontStyle: FontStyle.italic,
             ),
           ),
@@ -359,25 +374,27 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
     final completedTasks = taskLevels.where((task) => task.isCompleted).length;
     final progress = completedTasks / taskLevels.length;
     final l = AppLocalizations.of(context)!;
-    
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
+            children: [
+              Text(
                 l.progress,
-            style: TextStyle(
+                style: TextStyle(
                   fontSize: 18,
-              fontWeight: FontWeight.bold,
-                  color: Colors.green[800],
-            ),
-          ),
-          Text(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.greenAccent
+                      : Colors.green[800],
+                ),
+              ),
+              Text(
                 "$completedTasks/${taskLevels.length} ${l.completed}",
-            style: TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
                 ),
@@ -390,7 +407,10 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.greenAccent
+                      : Colors.green),
               minHeight: 8,
             ),
           ),
@@ -432,25 +452,25 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
         children: [
           // Main Card
           Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
                 colors: task.isUnlocked
                     ? [task.color.withOpacity(0.8), task.color]
                     : [Colors.grey[400]!, Colors.grey[600]!],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
-          BoxShadow(
-                  color: task.isUnlocked 
+                BoxShadow(
+                  color: task.isUnlocked
                       ? task.color.withOpacity(0.3)
                       : Colors.grey.withOpacity(0.3),
                   blurRadius: 15,
                   offset: Offset(0, 8),
-          ),
-        ],
-      ),
+                ),
+              ],
+            ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
@@ -458,8 +478,8 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                 onTap: task.isUnlocked ? () => _startTask(task) : null,
                 child: Padding(
                   padding: EdgeInsets.all(20),
-      child: Row(
-        children: [
+                  child: Row(
+                    children: [
                       // Task Icon
                       Container(
                         width: 80,
@@ -468,7 +488,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(20),
                         ),
-            child: Center(
+                        child: Center(
                           child: Text(
                             task.icon,
                             style: TextStyle(fontSize: 40),
@@ -476,7 +496,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                         ),
                       ),
                       SizedBox(width: 20),
-                      
+
                       // Task Info
                       Expanded(
                         child: Column(
@@ -487,10 +507,10 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                                 Expanded(
                                   child: Text(
                                     task.title,
-                  style: TextStyle(
+                                    style: TextStyle(
                                       fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -522,13 +542,14 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                               children: [
                                 _buildInfoChip(task.difficulty, Icons.star),
                                 SizedBox(width: 10),
-                                _buildInfoChip(task.estimatedTime, Icons.access_time),
+                                _buildInfoChip(
+                                    task.estimatedTime, Icons.access_time),
                               ],
-              ),
-          ],
-        ),
-      ),
-                      
+                            ),
+                          ],
+                        ),
+                      ),
+
                       // Arrow or Lock
                       Container(
                         width: 40,
@@ -538,18 +559,20 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          task.isUnlocked ? Icons.arrow_forward_ios : Icons.lock,
-                    color: Colors.white,
+                          task.isUnlocked
+                              ? Icons.arrow_forward_ios
+                              : Icons.lock,
+                          color: Colors.white,
                           size: 20,
-                  ),
-                ),
-              ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
           ),
-          
+
           // Unlock Animation
           if (!task.isUnlocked && index == currentUnlockedLevel + 1)
             Positioned.fill(
@@ -562,18 +585,18 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                       Colors.orange.withOpacity(0.3),
                     ],
                   ),
-              ),
-              child: Center(
-                child: Text(
+                ),
+                child: Center(
+                  child: Text(
                     AppLocalizations.of(context)!.completePrevTaskToUnlock,
                     style: TextStyle(
-                    color: Colors.white,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
+                    ),
                   ),
                 ),
               ),
-            ),
             ),
         ],
       ),
@@ -583,7 +606,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
   Widget _buildInfoChip(String text, IconData icon) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -609,7 +632,8 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => TaskGameWrapper(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            TaskGameWrapper(
           task: task,
           onComplete: () => _completeTask(task.id),
         ),
@@ -707,11 +731,12 @@ class FloatingElementsPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.green.withOpacity(0.1);
-    
+
     for (int i = 0; i < 20; i++) {
       final x = (size.width * (i / 20) + animationValue * 50) % size.width;
-      final y = (size.height * ((i * 0.7) % 1) + animationValue * 30) % size.height;
-      
+      final y =
+          (size.height * ((i * 0.7) % 1) + animationValue * 30) % size.height;
+
       canvas.drawCircle(
         Offset(x, y),
         5 + (i % 3) * 2,

@@ -23,24 +23,27 @@ class _WellnessPageState extends State<WellnessPage> {
     final ImageSource? source = await showDialog<ImageSource>(
       context: context,
       builder: (BuildContext context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          backgroundColor: Colors.green[50],
+          backgroundColor: isDark ? Colors.grey[850] : Colors.green[50],
           title: Text(
             "Choose Image Source",
             style: TextStyle(
               fontFamily: 'Roboto',
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Colors.green[800],
+              color: isDark ? Colors.greenAccent : Colors.green[800],
             ),
           ),
           content: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.green.shade200, Colors.green.shade100],
+                colors: isDark
+                    ? [Colors.grey[800]!, Colors.grey[700]!]
+                    : [Colors.green.shade200, Colors.green.shade100],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -50,32 +53,36 @@ class _WellnessPageState extends State<WellnessPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  leading: Icon(Icons.camera_alt, color: Colors.green[700]),
+                  leading: Icon(Icons.camera_alt,
+                      color: isDark ? Colors.greenAccent : Colors.green[700]),
                   title: Text(
                     "Camera",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.green[900],
+                      color: isDark ? Colors.white : Colors.green[900],
                     ),
                   ),
                   onTap: () => Navigator.pop(context, ImageSource.camera),
-                  hoverColor: Colors.green[300],
+                  hoverColor: isDark ? Colors.grey[600] : Colors.green[300],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                Divider(color: Colors.green[300], thickness: 1),
+                Divider(
+                    color: isDark ? Colors.grey[600] : Colors.green[300],
+                    thickness: 1),
                 ListTile(
-                  leading: Icon(Icons.photo_library, color: Colors.green[700]),
+                  leading: Icon(Icons.photo_library,
+                      color: isDark ? Colors.greenAccent : Colors.green[700]),
                   title: Text(
                     "Gallery",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.green[900],
+                      color: isDark ? Colors.white : Colors.green[900],
                     ),
                   ),
                   onTap: () => Navigator.pop(context, ImageSource.gallery),
-                  hoverColor: Colors.green[300],
+                  hoverColor: isDark ? Colors.grey[600] : Colors.green[300],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -105,63 +112,63 @@ class _WellnessPageState extends State<WellnessPage> {
   }
 
   Future<void> _fetchImageDescription(File image) async {
-  setState(() => _isLoading = true);
-  try {
-    var url = Uri.parse("https://SanmathiSethu06-ObjectDetectionAPI.hf.space/detect");
-    var request = http.MultipartRequest("POST", url)
-      ..files.add(await http.MultipartFile.fromPath("image", image.path));
-    var response = await request.send();
-    var responseBody = await response.stream.bytesToString();
+    setState(() => _isLoading = true);
+    try {
+      var url = Uri.parse(
+          "https://SanmathiSethu06-ObjectDetectionAPI.hf.space/detect");
+      var request = http.MultipartRequest("POST", url)
+        ..files.add(await http.MultipartFile.fromPath("image", image.path));
+      var response = await request.send();
+      var responseBody = await response.stream.bytesToString();
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(responseBody);
-      final labelsRaw = data['labels'];
-      final countRaw = data['count'];
-      if (labelsRaw != null && labelsRaw is Map) {
-        final labelsMap = Map<String, dynamic>.from(labelsRaw);
+      if (response.statusCode == 200) {
+        var data = jsonDecode(responseBody);
+        final labelsRaw = data['labels'];
+        final countRaw = data['count'];
+        if (labelsRaw != null && labelsRaw is Map) {
+          final labelsMap = Map<String, dynamic>.from(labelsRaw);
 
-        // ✅ Extract detected labels
-        final detectedLabels = labelsMap.keys.toList();
+          // ✅ Extract detected labels
+          final detectedLabels = labelsMap.keys.toList();
 
-        // ✅ Build final map { "labels": ["Bottle", "Drink", "Food"] }
-        final descriptionMap = {
-          "labels": detectedLabels,
-          "count": countRaw,
-        };
+          // ✅ Build final map { "labels": ["Bottle", "Drink", "Food"] }
+          final descriptionMap = {
+            "labels": detectedLabels,
+            "count": countRaw,
+          };
 
-        setState(() {
-          _isLoading = false;
-          _imageDescription = detectedLabels.isNotEmpty
-              ? detectedLabels.join(", ")
-              : "No objects detected.";
-        });
+          setState(() {
+            _isLoading = false;
+            _imageDescription = detectedLabels.isNotEmpty
+                ? detectedLabels.join(", ")
+                : "No objects detected.";
+          });
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ImageResultPage(
-              image: image,
-              descriptionText: descriptionMap, // 👈 Pass final map here
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ImageResultPage(
+                image: image,
+                descriptionText: descriptionMap, // 👈 Pass final map here
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          setState(() {
+            _isLoading = false;
+            _imageDescription = "No objects detected.";
+          });
+          _showUserMessage("No labels found, cannot fetch data.");
+        }
       } else {
-        setState(() {
-          _isLoading = false;
-          _imageDescription = "No objects detected.";
-        });
-        _showUserMessage("No labels found, cannot fetch data.");
+        setState(() => _isLoading = false);
+        _showUserMessage("API Request failed.");
       }
-    } else {
+    } catch (e) {
       setState(() => _isLoading = false);
-      _showUserMessage("API Request failed.");
+      _showUserMessage("This may take a while. Please try again later.");
     }
-  } catch (e) {
-    setState(() => _isLoading = false);
-    _showUserMessage("This may take a while. Please try again later.");
   }
-}
-
 
   void _showUserMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -175,6 +182,7 @@ class _WellnessPageState extends State<WellnessPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       // Keep the same functionality
       extendBodyBehindAppBar: true,
@@ -185,14 +193,16 @@ class _WellnessPageState extends State<WellnessPage> {
             Icon(Icons.spa, color: Colors.white),
             SizedBox(width: 8),
             Text("Wellness & Environment",
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
           ],
         ),
         backgroundColor: Colors.green[900],
         elevation: 10,
         shadowColor: Colors.black.withOpacity(0.3),
         centerTitle: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))),
       ),
       body: Stack(
         children: [
@@ -201,10 +211,13 @@ class _WellnessPageState extends State<WellnessPage> {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/ease.jpg'), // Replaced with local asset
+                  image: AssetImage(
+                      'lib/assets/ease.jpg'), // Replaced with local asset
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
-                    Colors.white.withOpacity(0.7),
+                    isDark
+                        ? Colors.black.withOpacity(0.6)
+                        : Colors.white.withOpacity(0.7),
                     BlendMode.srcOver,
                   ),
                 ),
@@ -249,7 +262,9 @@ class _WellnessPageState extends State<WellnessPage> {
                 padding: EdgeInsets.all(20),
                 margin: EdgeInsets.only(top: kToolbarHeight + 40),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.95),
+                  color: isDark
+                      ? Colors.grey[850]!.withOpacity(0.95)
+                      : Colors.white.withOpacity(0.95),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
@@ -267,7 +282,7 @@ class _WellnessPageState extends State<WellnessPage> {
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green[900],
+                        color: isDark ? Colors.greenAccent : Colors.green[900],
                       ),
                     ),
                     SizedBox(height: 20),
@@ -279,9 +294,13 @@ class _WellnessPageState extends State<WellnessPage> {
                         width: 220,
                         height: 220,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.green[900]!.withOpacity(0.5), width: 3),
+                          border: Border.all(
+                              color: isDark
+                                  ? Colors.greenAccent.withOpacity(0.5)
+                                  : Colors.green[900]!.withOpacity(0.5),
+                              width: 3),
                           borderRadius: BorderRadius.circular(20),
-                          color: Colors.green[50],
+                          color: isDark ? Colors.grey[800] : Colors.green[50],
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black12,
@@ -291,11 +310,16 @@ class _WellnessPageState extends State<WellnessPage> {
                           ],
                         ),
                         child: _selectedImage == null
-                            ? Icon(Icons.add_a_photo, size: 80, color: Colors.green[800])
+                            ? Icon(Icons.add_a_photo,
+                                size: 80,
+                                color: isDark
+                                    ? Colors.greenAccent
+                                    : Colors.green[800])
                             : ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.file(_selectedImage!, fit: BoxFit.cover),
-                        ),
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.file(_selectedImage!,
+                                    fit: BoxFit.cover),
+                              ),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -303,13 +327,20 @@ class _WellnessPageState extends State<WellnessPage> {
                     // Button
                     ElevatedButton.icon(
                       onPressed: _pickImage,
-                      icon: Icon(Icons.upload, color: Colors.white),
-                      label: Text("Select Image", style: TextStyle(color: Colors.white)),
+                      icon: Icon(Icons.upload,
+                          color: isDark ? Colors.black : Colors.white),
+                      label: Text("Select Image",
+                          style: TextStyle(
+                              color: isDark ? Colors.black : Colors.white)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[700],
-                        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 14),
-                        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        backgroundColor:
+                            isDark ? Colors.greenAccent : Colors.green[700],
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 25, vertical: 14),
+                        textStyle: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
                         elevation: 6,
                       ),
                     ),
@@ -325,7 +356,7 @@ class _WellnessPageState extends State<WellnessPage> {
                           style: TextStyle(
                             fontSize: 16,
                             fontStyle: FontStyle.italic,
-                            color: Colors.grey[800],
+                            color: isDark ? Colors.grey[300] : Colors.grey[800],
                           ),
                         ),
                       ),
@@ -333,12 +364,12 @@ class _WellnessPageState extends State<WellnessPage> {
                     // Motivational quote
                     SizedBox(height: 10),
                     Text(
-                      "“The earth does not belong to us: we belong to the earth.” 🌍",
+                      "\"The earth does not belong to us: we belong to the earth.\" 🌍",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
                         fontStyle: FontStyle.italic,
-                        color: Colors.grey[700],
+                        color: isDark ? Colors.grey[400] : Colors.grey[700],
                       ),
                     ),
                   ],

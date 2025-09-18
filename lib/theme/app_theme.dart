@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 ThemeData buildLightTheme() {
   final base = ThemeData.light(useMaterial3: true);
-  final colorScheme = ColorScheme.fromSeed(seedColor: const Color(0xFF2e7d32), brightness: Brightness.light);
+  final colorScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF2e7d32), brightness: Brightness.light);
 
   return base.copyWith(
     colorScheme: colorScheme,
@@ -15,7 +16,7 @@ ThemeData buildLightTheme() {
       bodyMedium: GoogleFonts.inter(),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: colorScheme.primary,
+      backgroundColor: Colors.green[800], // Dark green color
       foregroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
@@ -40,7 +41,8 @@ ThemeData buildLightTheme() {
     ),
     cardTheme: const CardThemeData(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16))),
     ),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
@@ -52,7 +54,8 @@ ThemeData buildLightTheme() {
 
 ThemeData buildDarkTheme() {
   final base = ThemeData.dark(useMaterial3: true);
-  final colorScheme = ColorScheme.fromSeed(seedColor: const Color(0xFF66bb6a), brightness: Brightness.dark);
+  final colorScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF66bb6a), brightness: Brightness.dark);
 
   return base.copyWith(
     colorScheme: colorScheme,
@@ -64,7 +67,7 @@ ThemeData buildDarkTheme() {
       bodyMedium: GoogleFonts.inter(),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: colorScheme.surfaceContainerHighest,
+      backgroundColor: Colors.green[800], // Dark green color for dark theme too
       foregroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
@@ -90,7 +93,8 @@ ThemeData buildDarkTheme() {
     cardTheme: const CardThemeData(
       elevation: 2,
       color: Color(0xFF151922),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16))),
     ),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
@@ -99,4 +103,3 @@ ThemeData buildDarkTheme() {
     ),
   );
 }
-
