@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'disposal2.dart';
 import 'localization/app_localizations.dart';
+
 class ImageResultPage1 extends StatefulWidget {
   final File image;
   final Map<String, dynamic> descriptionText;
@@ -16,7 +17,8 @@ class ImageResultPage1 extends StatefulWidget {
   _ImageResultPageState createState() => _ImageResultPageState();
 }
 
-class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerProviderStateMixin {
+class _ImageResultPageState extends State<ImageResultPage1>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isLoading = false;
   String _responseText = "Select a tab to fetch data";
@@ -29,7 +31,10 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this, initialIndex: 3); // Start at Disposal Measures tab
+    _tabController = TabController(
+        length: 4,
+        vsync: this,
+        initialIndex: 3); // Start at Disposal Measures tab
     _extractLabels();
     _fetchData("Disposal Measures"); // Fetch data for the default tab
   }
@@ -42,17 +47,19 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
 
       if (widget.descriptionText != null && widget.descriptionText.isNotEmpty) {
         // Convert description text to a Map
-        Map<String, dynamic> descriptionMap = Map<String, dynamic>.from(widget.descriptionText);
+        Map<String, dynamic> descriptionMap =
+            Map<String, dynamic>.from(widget.descriptionText);
 
         // Extract keys (labels) and values (count)
         List<String> labels = descriptionMap.keys.toList();
-        int totalCount = descriptionMap.values.fold(0, (sum, value) => sum + (value as int));
+        int totalCount =
+            descriptionMap.values.fold(0, (sum, value) => sum + (value as int));
 
         // Store the extracted labels and count
         setState(() {
-          _extractedLabels = descriptionMap;  // Keep full map for reference
-          _labels = labels;  // Store extracted keys separately
-          _count = totalCount;  // Store total count of values
+          _extractedLabels = descriptionMap; // Keep full map for reference
+          _labels = labels; // Store extracted keys separately
+          _count = totalCount; // Store total count of values
         });
 
         print("✅ Extracted Labels List: $_labels");
@@ -80,7 +87,8 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
   Future<String?> _fetchAPIKey() async {
     try {
       print("🔄 Fetching API Keys from Firestore...");
-      DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore.instance
+      DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
+          .instance
           .collection("company")
           .doc("conversationllama")
           .get();
@@ -88,8 +96,10 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
       // Check if the field with the endpoint as key exists.
       if (doc.exists &&
           doc.data() != null &&
-          doc.data()!.containsKey("https://open-ai21.p.rapidapi.com/conversationllama")) {
-        List<dynamic> apiKeys = doc.data()!["https://open-ai21.p.rapidapi.com/conversationllama"];
+          doc.data()!.containsKey(
+              "https://open-ai21.p.rapidapi.com/conversationllama")) {
+        List<dynamic> apiKeys =
+            doc.data()!["https://open-ai21.p.rapidapi.com/conversationllama"];
 
         if (apiKeys.isEmpty) {
           print("❌ No API keys available in Firestore");
@@ -146,16 +156,16 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
     String formattedQuery;
     if (query == "Product Details") {
       formattedQuery =
-      "Based on these labels: ${_labels.join(", ")}, identify the product. Explain its significance in daily life and highlight three key advantages and disadvantages that users commonly experience and explain in detail";
+          "Based on these labels: ${_labels.join(", ")}, identify the product. Explain its significance in daily life and highlight three key advantages and disadvantages that users commonly experience and explain in detail";
     } else if (query == "Environmental Impact") {
       formattedQuery =
-      "Using these labels: ${_labels.join(", ")}, determine the product. Analyze its impact on the environment, including its effects on ecosystems and practical uses. If it poses harm, suggest realistic ways to repurpose or dispose of it responsibly to minimize pollution and promote sustainability. Do not include phrases like 'Below is' or 'Here is' in your response; provide only the content and explain in detail";
+          "Using these labels: ${_labels.join(", ")}, determine the product. Analyze its impact on the environment, including its effects on ecosystems and practical uses. If it poses harm, suggest realistic ways to repurpose or dispose of it responsibly to minimize pollution and promote sustainability. Do not include phrases like 'Below is' or 'Here is' in your response; provide only the content and explain in detail";
     } else if (query == "Health Impact") {
       formattedQuery =
-      "Identify the product based on these labels: ${_labels.join(", ")}. Discuss its health benefits and potential risks when used or consumed. Address common concerns people face regarding safety, allergies, or long-term effects. Avoid unnecessary introductory phrases and provide direct, clear information and explain in detail with needed measure to be taken";
+          "Identify the product based on these labels: ${_labels.join(", ")}. Discuss its health benefits and potential risks when used or consumed. Address common concerns people face regarding safety, allergies, or long-term effects. Avoid unnecessary introductory phrases and provide direct, clear information and explain in detail with needed measure to be taken";
     } else {
       formattedQuery =
-      "Recognizing the product from these labels: ${_labels.join(", ")}, explain the correct disposal methods. Provide clear, easy-to-follow steps that ensure environmental safety and also provide some craft work ideas as Task .Use simple language so even an 8-year-old can understand how to dispose of it properly without harming nature. Do not include phrases like 'Below is' or 'Here is'; deliver the information directly and explain in detail after explaining give me the task needed to be done to dispose them mention those task seperatedly as Task to be taken followed by the task only in bulletin";
+          "Recognizing the product from these labels: ${_labels.join(", ")}, explain the correct disposal methods. Provide clear, easy-to-follow steps that ensure environmental safety and also provide some craft work ideas as Task .Use simple language so even an 8-year-old can understand how to dispose of it properly without harming nature. Do not include phrases like 'Below is' or 'Here is'; deliver the information directly and explain in detail after explaining give me the task needed to be done to dispose them mention those task seperatedly as Task to be taken followed by the task only in bulletin";
     }
 
     setState(() {
@@ -198,7 +208,8 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
       print("📩 Raw Response Body: ${response.body}");
 
       // Ensure proper UTF-8 decoding.
-      String decodedBody = utf8.decode(response.bodyBytes, allowMalformed: true);
+      String decodedBody =
+          utf8.decode(response.bodyBytes, allowMalformed: true);
       print("📩 Decoded Response Body: $decodedBody");
 
       setState(() {
@@ -235,31 +246,31 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
               centerTitle: true,
               title: innerBoxIsScrolled
                   ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    l.productAnalysis,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      letterSpacing: 1.2,
-                      foreground: Paint()
-                        ..shader = LinearGradient(
-                          colors: [Colors.greenAccent, Colors.white],
-                        ).createShader(Rect.fromLTWH(0, 0, 200, 40)),
-                      shadows: [
-                        Shadow(
-                          blurRadius: 6,
-                          color: Colors.black87,
-                          offset: Offset(2, 2),
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          l.productAnalysis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            letterSpacing: 1.2,
+                            foreground: Paint()
+                              ..shader = LinearGradient(
+                                colors: [Colors.greenAccent, Colors.white],
+                              ).createShader(Rect.fromLTWH(0, 0, 200, 40)),
+                            shadows: [
+                              Shadow(
+                                blurRadius: 6,
+                                color: Colors.black87,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
                         ),
+                        SizedBox(height: 4),
                       ],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 4),
-                ],
-              )
+                    )
                   : null,
               background: Stack(
                 fit: StackFit.expand,
@@ -294,14 +305,29 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
                 unselectedLabelColor: Colors.grey,
                 indicatorColor: Colors.green[700],
                 onTap: (index) {
-                  List<String> queries = [l.productDetailsTab, l.environmentalImpactTab, l.healthImpactTab, l.disposalMeasuresTab];
+                  List<String> queries = [
+                    l.productDetailsTab,
+                    l.environmentalImpactTab,
+                    l.healthImpactTab,
+                    l.disposalMeasuresTab
+                  ];
                   _fetchData(queries[index]);
                 },
                 tabs: [
-                  Tab(icon: Icon(Icons.info_outline, color: Colors.green[800]), text: l.productDetailsTab),
-                  Tab(icon: Icon(Icons.eco, color: Colors.green[800]), text: l.environmentalImpactTab),
-                  Tab(icon: Icon(Icons.health_and_safety, color: Colors.green[800]), text: l.healthImpactTab),
-                  Tab(icon: Icon(Icons.delete_outline, color: Colors.green[800]), text: l.disposalMeasuresTab),
+                  Tab(
+                      icon: Icon(Icons.info_outline, color: Colors.green[800]),
+                      text: l.productDetailsTab),
+                  Tab(
+                      icon: Icon(Icons.eco, color: Colors.green[800]),
+                      text: l.environmentalImpactTab),
+                  Tab(
+                      icon: Icon(Icons.health_and_safety,
+                          color: Colors.green[800]),
+                      text: l.healthImpactTab),
+                  Tab(
+                      icon:
+                          Icon(Icons.delete_outline, color: Colors.green[800]),
+                      text: l.disposalMeasuresTab),
                 ],
               ),
             ),
@@ -309,123 +335,133 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 500),
                 child: _isLoading
-                    ? Center(child: CircularProgressIndicator(color: Colors.green))
+                    ? Center(
+                        child: CircularProgressIndicator(color: Colors.green))
                     : SingleChildScrollView(
-                  padding: EdgeInsets.all(16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white.withOpacity(0.1), // Glassmorphic effect
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.green.withOpacity(0.3),
-                          blurRadius: 10,
-                          spreadRadius: 2,
-                          offset: Offset(2, 4),
-                        )
-                      ],
-                      border: Border.all(color: Colors.white.withOpacity(0.2)),
-                    ),
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.insights, color: Colors.green[900], size: 28),
-                            SizedBox(width: 8),
-                            Text(
-                              l.analysisResult,
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                foreground: Paint()
-                                  ..shader = LinearGradient(
-                                    colors: [Colors.green[800]!, Colors.teal[300]!],
-                                  ).createShader(Rect.fromLTWH(0, 0, 200, 50)),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(color: Colors.green[700], thickness: 1.5),
-                        SizedBox(height: 10),
-
-                        /// **Typing Animation for Response**
-                        AnimatedOpacity(
-                          duration: Duration(milliseconds: 800),
-                          opacity: 1.0,
-                          child: DefaultTextStyle(
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.black87,
-                              height: 1.6,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            child: AnimatedTextKit(
-                              animatedTexts: [
-                                TypewriterAnimatedText(
-                                  _responseText,
-                                  speed: Duration(milliseconds: 30), // Adjust speed here
-                                ),
-                              ],
-                              isRepeatingAnimation: false,
-                            ),
+                        padding: EdgeInsets.all(16),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white
+                                .withOpacity(0.1), // Glassmorphic effect
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.green.withOpacity(0.3),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                                offset: Offset(2, 4),
+                              )
+                            ],
+                            border: Border.all(
+                                color: Colors.white.withOpacity(0.2)),
                           ),
-                        ),
-
-                        SizedBox(height: 12),
-                        if (_tabController.index == 3)
-                          Center(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DisposalPage(
-                                      responseText: _responseText,
-                                      image: widget.image,
-                                      count: _count, // Pass the count value
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.insights,
+                                      color: Colors.green[900], size: 28),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    l.analysisResult,
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.greenAccent,
                                     ),
                                   ),
-                                );
-                              },
-                              icon: Icon(Icons.battery_saver, color: Colors.white),
-                              label: Text(
-                                ' ${l.disposeAndClean}',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                ],
                               ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green[800],
-                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                              Divider(color: Colors.green[700], thickness: 1.5),
+                              SizedBox(height: 10),
+
+                              /// **Typing Animation for Response**
+                              AnimatedOpacity(
+                                duration: Duration(milliseconds: 800),
+                                opacity: 1.0,
+                                child: DefaultTextStyle(
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    height: 1.6,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  child: AnimatedTextKit(
+                                    animatedTexts: [
+                                      TypewriterAnimatedText(
+                                        _responseText,
+                                        speed: Duration(
+                                            milliseconds:
+                                                30), // Adjust speed here
+                                      ),
+                                    ],
+                                    isRepeatingAnimation: false,
+                                  ),
                                 ),
-                                elevation: 5,
                               ),
-                            ),
+
+                              SizedBox(height: 12),
+                              if (_tabController.index == 3)
+                                Center(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DisposalPage(
+                                            responseText: _responseText,
+                                            image: widget.image,
+                                            count:
+                                                _count, // Pass the count value
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(Icons.battery_saver,
+                                        color: Colors.white),
+                                    label: Text(
+                                      ' ${l.disposeAndClean}',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green[800],
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 24, vertical: 12),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      elevation: 5,
+                                    ),
+                                  ),
+                                ),
+                              SizedBox(height: 12),
+                              Divider(color: Colors.green[700], thickness: 1.5),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Icon(Icons.eco,
+                                      color: Colors.green[700], size: 24),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    l.ecoFriendlyInsights,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.green[800],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        SizedBox(height: 12),
-                        Divider(color: Colors.green[700], thickness: 1.5),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Icon(Icons.eco, color: Colors.green[700], size: 24),
-                            SizedBox(width: 4),
-                            Text(
-                              l.ecoFriendlyInsights,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green[800],
-                              ),
-                            ),
-                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ),
           ],
@@ -434,11 +470,11 @@ class _ImageResultPageState extends State<ImageResultPage1> with SingleTickerPro
     );
   }
 
-
   String formatResponseText(String responseBody) {
     try {
       var decodedJson = jsonDecode(responseBody);
-      if (decodedJson is Map<String, dynamic> && decodedJson.containsKey("result")) {
+      if (decodedJson is Map<String, dynamic> &&
+          decodedJson.containsKey("result")) {
         String text = decodedJson["result"];
         // Define a replacement map for fixing encoding issues
         final Map<String, String> replacements = {

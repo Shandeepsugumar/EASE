@@ -37,15 +37,20 @@ class HomePage extends StatelessWidget {
 
   Widget _buildLanguageDialogContent(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark
+            ? Colors.black
+            : Colors.white, // Black for dark theme, white for light theme
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.black26,
+            color: isDark ? Colors.black54 : Colors.black26,
             blurRadius: 10.0,
             offset: Offset(0.0, 10.0),
           ),
@@ -59,31 +64,81 @@ class HomePage extends StatelessWidget {
             style: TextStyle(
               fontSize: 22.0,
               fontWeight: FontWeight.w600,
-              color: Colors.green[800],
+              color: isDark
+                  ? Colors.greenAccent
+                  : Colors.green[
+                      800], // White text for dark theme, green for light theme
             ),
           ),
           const SizedBox(height: 16.0),
-          const Divider(thickness: 1),
+          Divider(
+            thickness: 1,
+            color: isDark
+                ? Colors.grey[700]
+                : Colors.grey[300], // Theme-aware divider
+          ),
           const SizedBox(height: 8),
           ListTile(
-            leading: const Icon(Icons.sort_by_alpha_sharp, color: Colors.green),
-            title: Text(l.english),
+            leading: Icon(
+              Icons.sort_by_alpha_sharp,
+              color: isDark
+                  ? Colors.greenAccent
+                  : Colors
+                      .green, // White icon for dark theme, green for light theme
+            ),
+            title: Text(
+              l.english,
+              style: TextStyle(
+                color: isDark
+                    ? Colors.white
+                    : Colors
+                        .black, // White text for dark theme, black for light theme
+              ),
+            ),
             onTap: () {
               _updateLanguage(context, "English");
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            leading: const Icon(Icons.language, color: Colors.green),
-            title: Text(l.tamil),
+            leading: Icon(
+              Icons.language,
+              color: isDark
+                  ? Colors.greenAccent
+                  : Colors
+                      .green, // White icon for dark theme, green for light theme
+            ),
+            title: Text(
+              l.tamil,
+              style: TextStyle(
+                color: isDark
+                    ? Colors.white
+                    : Colors
+                        .black, // White text for dark theme, black for light theme
+              ),
+            ),
             onTap: () {
               _updateLanguage(context, "Tamil");
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            leading: const Icon(Icons.translate, color: Colors.green),
-            title: Text(l.hindi),
+            leading: Icon(
+              Icons.translate,
+              color: isDark
+                  ? Colors.greenAccent
+                  : Colors
+                      .green, // White icon for dark theme, green for light theme
+            ),
+            title: Text(
+              l.hindi,
+              style: TextStyle(
+                color: isDark
+                    ? Colors.white
+                    : Colors
+                        .black, // White text for dark theme, black for light theme
+              ),
+            ),
             onTap: () {
               _updateLanguage(context, "Hindi");
               Navigator.of(context).pop();
@@ -253,8 +308,8 @@ class HomePage extends StatelessWidget {
                               crossAxisCount: 2,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 8,
+                              crossAxisSpacing: 8,
                               childAspectRatio: 0.75,
                               children: [
                                 SlideInAnimation(
@@ -408,14 +463,6 @@ class HomePage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(
-          image: AssetImage('lib/assets/ease.jpg'),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            Colors.white.withOpacity(0.2),
-            BlendMode.srcOver,
-          ),
-        ),
       ),
       child: card,
     );
@@ -432,6 +479,9 @@ class HomePage extends StatelessWidget {
     Color iconColor,
     String language, // New parameter for language
   ) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // Choose accent icon based on identifier.
     IconData accentIcon;
     switch (cardIdentifier) {
@@ -477,18 +527,28 @@ class HomePage extends StatelessWidget {
         }
       },
       child: Container(
-        margin: const EdgeInsets.all(8),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white, // Card background
+          // Theme-aware card background
+          color: isDark ? theme.colorScheme.surface : Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.15),
+              color: isDark
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.grey.withOpacity(0.15),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
           ],
+          // Add border for dark theme
+          border: isDark
+              ? Border.all(
+                  color: theme.colorScheme.outline.withOpacity(0.2),
+                  width: 1,
+                )
+              : null,
         ),
         child: Stack(
           clipBehavior: Clip.none,
@@ -513,7 +573,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            // Card content.
+            // Card content with overflow protection
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -527,20 +587,35 @@ class HomePage extends StatelessWidget {
                   child: Icon(icon, color: iconColor),
                 ),
                 const SizedBox(height: 12),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: titleFontSize,
-                    color: Colors.black87,
+                // Title with overflow protection
+                Flexible(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: titleFontSize,
+                      // Theme-aware text color
+                      color:
+                          isDark ? theme.colorScheme.onSurface : Colors.black87,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: subtitleFontSize,
-                    color: Colors.grey[700],
+                // Subtitle with overflow protection
+                Flexible(
+                  child: Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: subtitleFontSize,
+                      // Theme-aware subtitle color
+                      color: isDark
+                          ? theme.colorScheme.onSurface.withOpacity(0.7)
+                          : Colors.grey[700],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
