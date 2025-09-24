@@ -3,6 +3,7 @@ import 'package:ease/profile.dart';
 import 'package:ease/task.dart';
 import 'package:ease/wellness2.dart';
 import 'package:ease/widgets/animated_background.dart';
+import 'package:ease/sanitization_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -372,6 +373,26 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                SlideInAnimation(
+                                  delay: Duration(milliseconds: 800),
+                                  child: _buildCardWithBackground(
+                                    context,
+                                    _buildFeatureCard(
+                                      context,
+                                      Icons.cleaning_services,
+                                      "sanitization",
+                                      "Sanitization System",
+                                      "Clean & Sanitize",
+                                      isDark
+                                          ? Colors.purple[900]!
+                                          : Colors.purple[100]!,
+                                      isDark
+                                          ? Colors.purpleAccent
+                                          : Colors.purple[800]!,
+                                      language,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 30),
@@ -494,6 +515,9 @@ class HomePage extends StatelessWidget {
       case "daily":
         accentIcon = Icons.fitness_center;
         break;
+      case "sanitization":
+        accentIcon = Icons.clean_hands;
+        break;
       default:
         accentIcon = icon;
     }
@@ -523,6 +547,11 @@ class HomePage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => WellnessPage1()),
+          );
+        } else if (cardIdentifier == "sanitization") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SanitizationPage()),
           );
         }
       },
